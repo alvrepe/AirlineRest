@@ -1,6 +1,7 @@
 package org.iesfm.rest.controllers;
 
 import org.iesfm.rest.Flight;
+import org.iesfm.rest.FlightAPI;
 import org.iesfm.rest.dao.FlightDAO;
 import org.iesfm.rest.exceptions.FlightNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -13,13 +14,13 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-public class FlightController {
+public class FlightController implements FlightAPI {
     private FlightDAO flightDAO;
-
     public FlightController(FlightDAO flightDAO) {
         this.flightDAO = flightDAO;
     }
 
+    @Override
     @RequestMapping(method = RequestMethod.GET, path = "/flights")
     public List<Flight> list(
             @RequestParam(value = "origin", required = false) String origin
@@ -31,6 +32,7 @@ public class FlightController {
         }
     }
 
+    @Override
     @RequestMapping(method = RequestMethod.GET, path = "/flights/{flightNumber}")
     public Flight getFlight(
             @PathVariable("flightNumber") String flightNumber
@@ -44,6 +46,7 @@ public class FlightController {
         }
     }
 
+    @Override
     @RequestMapping(method = RequestMethod.POST, path = "/flights")
     public ResponseEntity<Void> createFlight(@RequestBody Flight flight) {
         if (!flightDAO.addFlight(flight)) {
@@ -58,6 +61,7 @@ public class FlightController {
         }
     }
 
+    @Override
     @RequestMapping(method = RequestMethod.PUT, path = "/flights/{flightNumber}")
     public void updateFlight(
             @PathVariable("flightNumber") String flightNumber,
@@ -72,6 +76,7 @@ public class FlightController {
         }
     }
 
+    @Override
     @RequestMapping(method = RequestMethod.DELETE, path = "/flights/{flightNumber}")
     public void deleteFlight(
             @PathVariable("flightNumber") String flightNumber
